@@ -98,11 +98,13 @@ def validate_creds(username, password):
 
     try:
         access_token = db_get_cookies(username, password)
-
+        print_and_log(f"Verifying Old Cookies : {access_token}")
         _id, logged = check_login(access_token)
         if logged:
+            print_and_log("Cookies Verified..")
             return _id, logged, access_token
-
+        else:
+            print_and_log("Cookies Expired..")
     except Exception:
         print_and_log("Error while validating creds from saved file, trying to login with username and password")
 

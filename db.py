@@ -183,7 +183,7 @@ def update_db(database, _id, field1, value1, field2, value2):
 
         sql_query = f"UPDATE {database} SET {field1} = '{value1}', {field2} = '{value2}' WHERE id = {_id}"
 
-        print_and_log(f"[SQL-QUERY]-[SET-COMPLETED] {sql_query}")
+        print_and_log(f"[SQL-QUERY]- {sql_query}")
         cursor.execute(sql_query)
 
         conn.commit()
@@ -249,7 +249,7 @@ def update_scheduletask_db(scheduleid, schedule_status, task_id, TaskStatus):
 
         sql_query = f"UPDATE ScheduleTask SET sub_processes = '{subprocesses}', status = '{schedule_status}' WHERE id = {scheduleid}"
 
-        print_and_log(f"[SQL-QUERY]-[UPDATE-COMPLETED] {sql_query}")
+        print_and_log(f"[SQL-QUERY]- {sql_query}")
         cursor.execute(sql_query)
 
         conn.commit()
@@ -382,20 +382,17 @@ def db_add_pending_schedule(**kwargs):
         cursor = conn.cursor()
 
         sql_query = (
-            f"""
-            SELECT id, schedule_at, ending_at
-            FROM ScheduleTask 
-            WHERE  status = 'Scheduled'
-                AND (
-                    (schedule_at > '{schedule_at}' AND ending_at < '{ending_at}')
-                    OR
-                    (schedule_at < '{schedule_at}' AND ending_at > '{ending_at}')                
-                    OR
-                    (schedule_at = '{schedule_at}')                
-                    OR
-                    (ending_at = '{ending_at}')                
-                );
-            """
+            f"SELECT id, schedule_at, ending_at "
+            f"FROM ScheduleTask "
+            f"WHERE status = 'Scheduled' AND ("
+            f"(schedule_at > '{schedule_at}' AND ending_at < '{ending_at}') "
+            f"OR "
+            f"(schedule_at < '{schedule_at}' AND ending_at > '{ending_at}') "
+            f"OR "
+            f"(schedule_at = '{schedule_at}') "
+            f"OR "
+            f"(ending_at = '{ending_at}') "
+            ");"
         )
         print_and_log(f"[SQL-QUERY]-[ADD-PENDING-SCHEDULING]: {sql_query}")
 
@@ -439,7 +436,8 @@ def db_add_pending_tasks(**kwargs):
             ', '.join(kwargs.keys()),
             ', '.join(['?' for _ in range(len(kwargs))])
         )
-        print_and_log(f"[SQL-QUERY]-[ADD-PENDING-SCHEDULING]: {sql_query} {tuple(kwargs.values())}")
+        # print_and_log(f"[SQL-QUERY]-[ADD-PENDING-SCHEDULING]: {sql_query} {tuple(kwargs.values())}")
+        print_and_log(f"[SQL-QUERY]-[ADD-PENDING-SCHEDULING]: {sql_query} {kwargs['task_id']}")
 
         cursor.execute(sql_query, tuple(kwargs.values()))
         conn.commit()
