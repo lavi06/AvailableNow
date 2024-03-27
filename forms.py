@@ -50,21 +50,22 @@ class CreateForm(FlaskForm):
     state_id = IntegerField('State ID', validators=[DataRequired()])
     city = StringField('City', validators=[DataRequired()])
     city_id = IntegerField('City ID', validators=[DataRequired()])
-    visiting = BooleanField('Visiting', validators=[DataRequired()])
 
-    show_reviews = BooleanField('Show Reviews', validators=[DataRequired()])
-    show_website = BooleanField('Show Website', validators=[DataRequired()])
+    visiting = BooleanField('Visiting')
 
-    face_time     = BooleanField('Face Time', validators=[DataRequired()])
-    private_calls = BooleanField('Private Calls', validators=[DataRequired()])
-    specials      = BooleanField('Specials', validators=[DataRequired()])
-    cancellation_policy = BooleanField('Cancellation Policy', validators=[DataRequired()])
-    private_text = BooleanField('Private Text', validators=[DataRequired()])
-    two_girls    = BooleanField('Two Girls', validators=[DataRequired()])
-    menu  = BooleanField('Menu', validators=[DataRequired()])
-    skype = BooleanField('Skype', validators=[DataRequired()])
+    show_reviews  = BooleanField('Show Reviews')
+    show_website  = BooleanField('Show Website')
 
-    show_photos = BooleanField('Show Photos', validators=[DataRequired()])
+    face_time     = BooleanField('Face Time')
+    private_calls = BooleanField('Private Calls')
+    specials      = BooleanField('Specials')
+    cancellation_policy = BooleanField('Cancellation Policy')
+    private_text = BooleanField('Private Text')
+    two_girls    = BooleanField('Two Girls')
+    menu         = BooleanField('Menu')
+    skype        = BooleanField('Skype')
+
+    show_photos = BooleanField('Show Photos')
 
     ### Conditional Required Fields
     by_request = SelectField('By Request', choices=[('ASK', 'Ask Me'), ('RATES', 'The Donation Entered Below'),
