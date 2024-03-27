@@ -68,7 +68,7 @@ def run_scheduler():
                 schedule_status = "Running"
 
 
-            if (end <= datetime.utcnow() and action != "Delete") or (end < datetime.utcnow() and action == "Delete"):
+            if (end == datetime.utcnow() and action != "Delete") or (end < datetime.utcnow() and action == "Delete"):
                 TASK_STATUS = "Expired"
                 ### IF TASK TIME IS EXPIRED
 
