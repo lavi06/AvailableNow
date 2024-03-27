@@ -303,7 +303,7 @@ def get_log(page_num):
     # # Get query parameters for pagination
     # page_num = int(request.args.get('page', 1))
     page_num = int(page_num)
-    page_size = 1000
+    page_size = 500
 
     log_lines = tail(page_size*page_num)
     paginated_lines = read_log_file(page_num, page_size, log_lines)

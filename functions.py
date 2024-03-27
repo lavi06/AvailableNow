@@ -212,6 +212,7 @@ def delete_ad(access_token, _id):
 
 
 def create_ad(access_token, _id, form=None, json_data=None):
+
     headers = get_auth_header(access_token)
 
     if json_data is None:

@@ -6,8 +6,8 @@ from datetime import datetime, timedelta
 import os
 
 import requests
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+# from flask import Flask, request, jsonify
+# from flask_cors import CORS
 
 from db import update_db, update_previous_data_db, update_scheduletask_db, update_scheduletask_db_stopped, \
                get_previous_data_db, db_get_pending_tasks, db_add_pending_schedule, db_add_pending_tasks, \
@@ -30,11 +30,14 @@ from functions import *
 
 
 def run_scheduler():
+    i = 0
 
     while True:
+        if i%10 == 0:
+            print_and_log(f"{i} - [SCHEDULER]: waiting for 5 sec")
+            i += 1
 
         time.sleep(5)
-        print_and_log("[SCHEDULER]: waiting for 5 sec")
         pending_task = db_get_pending_tasks()
 
         if not pending_task:
@@ -43,7 +46,7 @@ def run_scheduler():
             continue
 
         try:
-            print_and_log("-------------------------------------------------")
+            print_and_log("\n-------------------------------------------------")
             print_and_log("-------------------------------------------------")
             print_and_log(f"Found one request in pending Task : {pending_task['action']} | {pending_task}")
 
@@ -100,7 +103,7 @@ def run_scheduler():
                     json_data = json.loads(json_data)
 
                     delete_content, delete_status = delete_ad(access_token, str(_id))
-                    label = "Deleted"
+                    label = "Deleted Old Ad"
                     print_and_log(f"Ad : {label} | {delete_status} | {delete_content}")
                     TASK_STATUS = "Deleted Old Ad"
 
@@ -150,12 +153,14 @@ def run_scheduler():
             Status : {schedule_status}
             """
 
-            broadcast(html.replace("                ",""))
+            broadcast(html.replace("            ",""))
             ###############
             # print_and_log("TASK Error: ", e)
 
 
+
 run_scheduler()
+
 
 # print_and_log("starting the scheduling thread")
 # scheduling_thread = threading.Thread(target=run_scheduler)

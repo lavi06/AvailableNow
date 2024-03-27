@@ -459,6 +459,7 @@ def db_get_all_scheduled_ads(username):
 
     try:
         cursor = conn.cursor()
+
         sql_query = (
             f"""
             select id, username, created_at, schedule_at, ending_at, refreshing, json_data, status, sub_processes, completed_at, log from ScheduleTask 
@@ -467,7 +468,8 @@ def db_get_all_scheduled_ads(username):
             ;"""
         )
 
-        print_and_log(f"[SQL-QUERY]-[GET-ALL-SCHEDULE] {sql_query}")
+        sql_query_printable = sql_query.replace('\n', '')
+        print_and_log(f"[SQL-QUERY]-[GET-ALL-SCHEDULE] {sql_query_printable}")
 
         cursor.execute(sql_query)
         schedule_tasks = cursor.fetchall()
@@ -494,11 +496,12 @@ def db_get_all_completed_ads(username, page):
             SELECT id, username, created_at, schedule_at, ending_at, refreshing, json_data, status, sub_processes, completed_at, log from ScheduleTask 
             WHERE (status = 'Completed' OR status = 'Expired') AND username = '{username}' 
             ORDER BY schedule_at DESC 
-            LIMIT 10 OFFSET {page-1 * 10}
+            LIMIT 10 OFFSET {(page-1) * 10}
             ;"""
         )
+        sql_query_printable = sql_query.replace('\n', '')
 
-        print_and_log(f"[SQL-QUERY]-[GET-ALL-COMPLETED] {sql_query}")
+        print_and_log(f"[SQL-QUERY]-[GET-ALL-COMPLETED] - {sql_query_printable}")
 
         cursor.execute(sql_query)
         schedule_tasks = cursor.fetchall()
