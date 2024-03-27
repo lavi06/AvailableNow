@@ -146,7 +146,7 @@ def get_auth_header(access_token):
     return headers
 
 
-def get_user_details(access_token, _id, link):
+def get_user_details(access_token, _id, link = "Create"):
     _id = str(_id)
 
     try:
@@ -156,7 +156,7 @@ def get_user_details(access_token, _id, link):
         }
         if link == "Create":
             response = requests.get(f'https://api.preferred411.com/api/companions/{_id}/availableNowAds/create', headers=headers)
-        else:
+        elif link == "Edit":
             response = requests.get(f'https://api.preferred411.com/api/companions/{_id}/availableNowAds/edit', headers=headers)
 
         if response.status_code == 200:
