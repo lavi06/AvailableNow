@@ -77,8 +77,6 @@ def give_json_request(form):
 
         # In-calls / Out-calls
         "in_calls": form.in_calls.data,
-        "sub_city_id": form.sub_city_id.data if form.in_calls.data else None,
-        "sub_city": form.sub_city.data if form.in_calls.data else None,
         "out_calls": form.out_calls.data,
 
         # Select Your Available Time for TODAY Only
@@ -113,6 +111,16 @@ def give_json_request(form):
     try:
         json_data["today_available_from"] = form.today_available_from.data
     except:
+        pass
+
+    if form.in_calls.data:
+        try:
+            sub_city_id = int(form.sub_city_id.data)
+            json_data["sub_city_id"] = form.sub_city_id.data
+            # "sub_city": form.sub_city.data if form.in_calls.data else None,
+        except:
+            pass
+    else:
         pass
 
     return json_data

@@ -21,8 +21,9 @@ def broadcast(msg):
     to_url = f"https://api.telegram.org/bot{bot}/sendMessage?chat_id={channel_id}&text={msg}&parse_mode=HTML"
 
     resp = requests.get(to_url)
-
+    print_and_log("")
     print_and_log(resp.text)
+    print_and_log("")
     return resp.text
 
 

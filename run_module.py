@@ -33,23 +33,25 @@ def run_scheduler():
     i = 0
 
     while True:
-        if i%10 == 0:
-            print_and_log(f"{i} - [SCHEDULER]: waiting for 5 sec")
-            i += 1
 
         time.sleep(5)
-        pending_task = db_get_pending_tasks()
+        if i%10 == 0:
+            print_and_log(f"{i} - [SCHEDULER]: waiting for 5 sec")
+            to_print = 1
+        else:
+            to_print = 0
+
+        pending_task = db_get_pending_tasks(to_print)
+        i += 1
 
         if not pending_task:
-            # print_and_log("[SCHEDULER]: waiting for 5 sec")
-            # time.sleep(5)
             continue
 
         try:
-            print_and_log("\n-------------------------------------------------")
+            print_and_log("-------------------------------------------------")
             print_and_log("-------------------------------------------------")
             print_and_log(f"Found one request in pending Task : {pending_task['action']} | {pending_task}")
-
+            print_and_log("")
             primary_task_id = pending_task.get("id")
             scheduleid      = pending_task["schedule_id"]
             task_id         = pending_task["task_id"]
@@ -103,8 +105,10 @@ def run_scheduler():
                     json_data = json.loads(json_data)
 
                     delete_content, delete_status = delete_ad(access_token, str(_id))
+
                     label = "Deleted Old Ad"
                     print_and_log(f"Ad : {label} | {delete_status} | {delete_content}")
+
                     TASK_STATUS = "Deleted Old Ad"
 
                     create_content, create_status_code, TASK_STATUS = create_ad(access_token, _id, json_data=json_data)
@@ -155,8 +159,7 @@ def run_scheduler():
 
             broadcast(html.replace("            ",""))
             ###############
-            # print_and_log("TASK Error: ", e)
-
+            print_and_log("TASK Error: ", str(e))
 
 
 run_scheduler()

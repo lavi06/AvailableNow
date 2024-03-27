@@ -118,7 +118,7 @@ def db_init():
 
     previous_data = (
         "CREATE TABLE IF NOT EXISTS previous_data( "
-        "username VARCHAR(255) NOT NULL, "
+        "username VARCHAR(255) PRIMARY KEY  NOT NULL, "
         "data VARCHAR(255)"
         "); "
     )
@@ -337,7 +337,7 @@ def get_previous_data_db(username):
 
 
 
-def db_get_pending_tasks():
+def db_get_pending_tasks(to_print=1):
 
     conn = _db_get_connection()
     if conn is None:
@@ -352,8 +352,8 @@ def db_get_pending_tasks():
             "WHERE start <= datetime('now') "
             "AND task_status = 'Pending';"
         )
-
-        print_and_log(f"[SQL_QUERY]-[PENDING-TASK]: {sql_query}")
+        if to_print == 1:
+            print_and_log(f"[SQL_QUERY]-[PENDING-TASK]: {sql_query}")
 
         cursor.execute(sql_query)
         schedule_tasks = cursor.fetchall()
