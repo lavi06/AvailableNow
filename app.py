@@ -63,7 +63,6 @@ def status():
 @app.route("/get_user_fields", methods=["POST"])
 def user_fields():
 
-
     initialform = InitialForm(request.form)
 
     if not initialform.validate():
@@ -80,7 +79,12 @@ def user_fields():
 
         print_and_log(f"Logged In {_id} : {access_token}")
 
-        data = get_user_details(access_token, _id)
+        _status = check_status(access_token, _id)
+
+        if _status == False:
+            data = get_user_details(access_token, _id, "Create")
+        elif _status == True:
+            data = get_user_details(access_token, _id, "Edit")
 
         return jsonify({'data': data}), 200
 

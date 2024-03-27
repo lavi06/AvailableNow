@@ -146,7 +146,7 @@ def get_auth_header(access_token):
     return headers
 
 
-def get_user_details(access_token, _id):
+def get_user_details(access_token, _id, link):
     _id = str(_id)
 
     try:
@@ -154,12 +154,16 @@ def get_user_details(access_token, _id):
             'authorization': 'Bearer ' + access_token,
             'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
         }
+        if link == "Create":
+            response = requests.get(f'https://api.preferred411.com/api/companions/{_id}/availableNowAds/create', headers=headers)
+        else:
+            response = requests.get(f'https://api.preferred411.com/api/companions/{_id}/availableNowAds/edit', headers=headers)
 
-        response = requests.get(f'https://api.preferred411.com/api/companions/{_id}/availableNowAds/create', headers=headers)
         if response.status_code == 200:
             return response.json()["data"]
 
         else:
+            print_and_log(response.content)
             raise UserException("Got 400/500 status code: " + str(response.status_code) + ", response: " +
                                 str(response.json()))
 

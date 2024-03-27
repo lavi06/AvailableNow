@@ -35,7 +35,7 @@ def run_scheduler():
     while True:
 
         time.sleep(5)
-        if i%10 == 0:
+        if i%20 == 0:
             print_and_log(f"{i} - [SCHEDULER]: waiting for 5 sec")
             to_print = 1
         else:
