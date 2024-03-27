@@ -254,8 +254,66 @@ def previous_fields(username):
         return jsonify({'data': {}}), 403
 
 
+def tail(n=1000):
+    """
+    Read the last n lines from the file.
+    """
+    filename = "LOGS.log"
 
-app.run(host='0.0.0.0', port=5000, debug=True)
+    with open(filename, 'r') as file:
+        # Move the file pointer to the end
+        file.seek(0, os.SEEK_END)
+        # Track the current position in the file
+
+        position = file.tell()
+
+        lines = []
+        # Start reading the file from the end
+        while position > 0 and len(lines) < n:
+            # Move the position backwards by 1
+            position -= 1
+            # Move the file pointer to the new position
+            file.seek(position, os.SEEK_SET)
+            # Read the character at the current position
+            char = file.read(1)
+            # If the character is a newline, we found a line
+            if char == '\n':
+                lines.append(file.readline().rstrip())
+
+        # Reverse the list to get the lines in correct order
+        # lines.reverse()
+        return lines
+
+
+def read_log_file(page_num, page_size, log_lines):
+
+    # Calculate start and end indexes for pagination
+    start_index = (page_num - 1) * page_size
+    end_index = min(start_index + page_size, len(log_lines))
+
+    # Extract lines for the current page
+    page_lines = log_lines[start_index:end_index]
+
+    return page_lines
+
+
+@app.route('/log/<page_num>')
+def get_log(page_num):
+
+    # # Get query parameters for pagination
+    # page_num = int(request.args.get('page', 1))
+    page_num = int(page_num)
+    page_size = 1000
+
+    log_lines = tail(page_size*page_num)
+    paginated_lines = read_log_file(page_num, page_size, log_lines)
+    paginated_lines = "\n".join(reversed(paginated_lines)).replace('\n', '<br>')
+    # return jsonify(message="Hello,\nWorld!")
+    return paginated_lines
+
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000, debug=True)
 
 
 
