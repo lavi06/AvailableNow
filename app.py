@@ -256,7 +256,39 @@ def previous_fields(username):
 
         return jsonify({'data': data}), 200
     except:
-        return jsonify({'data': {}}), 403
+        data = {
+            "by_request": "ASK",
+            "cancellation_policy": True,
+            "country": "United States",
+            "country_id": 1,
+            "state": "Texas",
+            "state_id": 45,
+            "city": "Houston",
+            "city_id": 260,
+            "currency": "",
+            "donation_1": "",
+            "donation_1_duration": "",
+            "donation_2": "",
+            "donation_2_duration": "",
+            "face_time": True,
+            "in_calls": True,
+            "menu": True,
+            "out_calls": True,
+            "private_calls": True,
+            "private_text": True,
+            "show_photos": True,
+            "show_reviews": True,
+            "show_website": True,
+            "skype": True,
+            "specials": True,
+            "sub_city_id": "",
+            "today_anytime": "1",
+            "today_available_from": "08:00 AM",
+            "today_available_to": "05:00 PM",
+            "two_girls": True,
+            "visiting": True
+        }
+        return jsonify({'data': data}), 403
 
 
 def tail(n=1000):
