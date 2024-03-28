@@ -381,27 +381,35 @@ def db_add_pending_schedule(**kwargs):
 
         cursor = conn.cursor()
 
+        # sql_query = (
+        #     f"SELECT id, schedule_at, ending_at "
+        #     f"FROM ScheduleTask "
+        #     f"WHERE status = 'Scheduled' AND ("
+        #     f"(schedule_at > '{schedule_at}' AND ending_at < '{ending_at}') "
+        #     f"OR "
+        #     f"(schedule_at < '{schedule_at}' AND ending_at > '{ending_at}') "
+        #     f"OR "
+        #     f"(schedule_at = '{schedule_at}') "
+        #     f"OR "
+        #     f"(ending_at = '{ending_at}') "
+        #     ");"
+        # )
+
+
         sql_query = (
-            f"SELECT id, schedule_at, ending_at "
+            f"SELECT COUNT(*) As Count, id, schedule_at, ending_at "
             f"FROM ScheduleTask "
-            f"WHERE status = 'Scheduled' AND ("
-            f"(schedule_at > '{schedule_at}' AND ending_at < '{ending_at}') "
-            f"OR "
-            f"(schedule_at < '{schedule_at}' AND ending_at > '{ending_at}') "
-            f"OR "
-            f"(schedule_at = '{schedule_at}') "
-            f"OR "
-            f"(ending_at = '{ending_at}') "
-            ");"
+            f"WHERE NOT ('{schedule_at}' >= ending_at OR '{ending_at}' <= schedule_at);"
         )
+
         print_and_log(f"[SQL-QUERY]-[ADD-PENDING-SCHEDULING]: {sql_query}")
 
         cursor.execute(sql_query)
 
         total = cursor.fetchone()
 
-        if total is not None:
-            raise AlreadyScheduleException(f"Ad Overlap with ID {total[0]} | {total[1]} - {total[2]}")
+        if total[0] != 0:
+            raise AlreadyScheduleException(f"Ad Overlap with ID {total[1]} | {total[2]} - {total[3]}")
 
 
         sql_query = "INSERT INTO ScheduleTask ({}) VALUES ({})".format(
@@ -436,8 +444,9 @@ def db_add_pending_tasks(**kwargs):
             ', '.join(kwargs.keys()),
             ', '.join(['?' for _ in range(len(kwargs))])
         )
+
         # print_and_log(f"[SQL-QUERY]-[ADD-PENDING-SCHEDULING]: {sql_query} {tuple(kwargs.values())}")
-        print_and_log(f"[SQL-QUERY]-[ADD-PENDING-SCHEDULING]: {sql_query} {kwargs['task_id']}")
+        # print_and_log(f"[SQL-QUERY]-[ADD-PENDING-SCHEDULING]: {sql_query} {kwargs['task_id']}")
 
         cursor.execute(sql_query, tuple(kwargs.values()))
         conn.commit()

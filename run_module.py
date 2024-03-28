@@ -36,7 +36,7 @@ def run_scheduler():
 
         time.sleep(5)
         if i%20 == 0:
-            print_and_log(f"{i} - [SCHEDULER]: waiting for 5 sec")
+            # print_and_log(f"{i} - [SCHEDULER]: waiting for 5 sec")
             to_print = 1
         else:
             to_print = 0
@@ -68,7 +68,8 @@ def run_scheduler():
                 schedule_status = "Running"
 
 
-            if (end == datetime.utcnow() and action != "Delete") or (end < datetime.utcnow() and action == "Delete"):
+            # if (end == datetime.utcnow() and action != "Delete") or (end < datetime.utcnow() and action == "Delete"):
+            if (end <= datetime.utcnow() and action != "Delete"):
                 TASK_STATUS = "Expired"
                 ### IF TASK TIME IS EXPIRED
 
@@ -111,7 +112,7 @@ def run_scheduler():
 
                     TASK_STATUS = "Deleted Old Ad"
 
-                    create_content, create_status_code, TASK_STATUS = create_ad(access_token, _id, json_data=json_data)
+                    create_content, create_status_code, TASK_STATUS = create_ad(access_token, _id, json_data = json_data)
 
                     label = "Created" if action == "Create" else "Refreshed"
                     print_and_log(f"Ad : {label} | {create_status_code} : {TASK_STATUS} | {create_content}")

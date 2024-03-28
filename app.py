@@ -28,7 +28,6 @@ CORS(app)
 app.config['WTF_CSRF_ENABLED'] = False
 db_init()
 
-
 #################################
 #################################
 
@@ -64,6 +63,8 @@ def status():
 def user_fields():
 
     initialform = InitialForm(request.form)
+
+    return jsonify({'data': {}}), 200
 
     if not initialform.validate():
         errors = initialform.errors
@@ -307,7 +308,7 @@ def get_log(page_num):
     # # Get query parameters for pagination
     # page_num = int(request.args.get('page', 1))
     page_num = int(page_num)
-    page_size = 500
+    page_size = 250
 
     log_lines = tail(page_size*page_num)
     paginated_lines = read_log_file(page_num, page_size, log_lines)
