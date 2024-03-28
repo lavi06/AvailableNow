@@ -93,7 +93,7 @@ class CreateForm(FlaskForm):
 
     today_anytime = SelectField('Anytime/ Specific Time', choices=["0", "1"], validators=[DataRequired()])
 
-    if self.today_anytime == "0":
+    if today_anytime == "0":
         today_available_to = SelectField('Today Available To',
                                          choices=hour_choices,
                                          validators=[Optional()])
