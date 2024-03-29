@@ -93,7 +93,7 @@ class CreateForm(FlaskForm):
 
     today_anytime = SelectField('Anytime/ Specific Time', choices=["0", "1"], validators=[DataRequired()])
 
-    if today_anytime == "0":
+    if today_anytime.data == "0":
         today_available_to = SelectField('Today Available To',
                                          choices=hour_choices,
                                          validators=[Optional()])
@@ -132,7 +132,7 @@ class CreateForm(FlaskForm):
                 self.donation_2_duration.errors.append('Donation 2 Duration is required.')
                 return False
 
-        if self.today_anytime == "0" and self.today_anytime.data:
+        if self.today_anytime.data == "0" and self.today_anytime.data:
             flag = True
             if not self.today_available_from.data:
                 if not hasattr(self.today_available_from, 'errors'):
