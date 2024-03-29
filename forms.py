@@ -93,13 +93,13 @@ class CreateForm(FlaskForm):
 
     today_anytime = SelectField('Anytime/ Specific Time', choices=["0", "1"], validators=[DataRequired()])
 
-    if today_anytime.data == "0":
-        today_available_to = SelectField('Today Available To',
-                                         choices=hour_choices,
-                                         validators=[Optional()])
-        today_available_from = SelectField('Today Available From',
-                                           choices=hour_choices,
-                                           validators=[Optional()])
+    # if today_anytime.data == "0":
+    today_available_to = SelectField('Today Available To',
+                                     choices=hour_choices,
+                                     validators=[Optional()])
+    today_available_from = SelectField('Today Available From',
+                                       choices=hour_choices,
+                                       validators=[Optional()])
 
     def validate(self, extra_validators=None):
         if not super(CreateForm, self).validate():
