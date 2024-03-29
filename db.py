@@ -350,7 +350,8 @@ def db_get_pending_tasks(to_print=1):
             "SELECT * "
             "FROM TASKS "
             "WHERE start <= datetime('now') "
-            "AND task_status = 'Pending';"
+            "AND task_status = 'Pending' "
+            "ORDER BY start ASC;"
         )
         if to_print == 1:
             print_and_log(f"[SQL_QUERY]-[PENDING-TASK]: {sql_query}")
