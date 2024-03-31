@@ -117,6 +117,7 @@ def give_json_request(form):
         try:
             sub_city_id = int(form.sub_city_id.data)
             json_data["sub_city_id"] = form.sub_city_id.data
+            json_data["sub_city"] = form.sub_city.data
             # "sub_city": form.sub_city.data if form.in_calls.data else None,
         except:
             pass

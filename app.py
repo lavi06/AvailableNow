@@ -264,22 +264,25 @@ def previous_fields(username):
         "donation_1_duration": "",
         "donation_2": "",
         "donation_2_duration": "",
-        "face_time": True,
-        "in_calls": True,
-        "menu": True,
         "out_calls": True,
-        "private_calls": True,
-        "private_text": True,
         "show_photos": True,
         "show_reviews": True,
         "show_website": True,
         "skype": True,
         "specials": True,
+        "sub_city": "",
         "sub_city_id": "",
         "today_anytime": "1",
         "today_available_from": "08:00 AM",
         "today_available_to": "05:00 PM",
+
         "two_girls": True,
+        "private_calls": True,
+        "private_text": True,
+        "face_time": True,
+        "in_calls": True,
+        "menu": True,
+
         "visiting": True
     }
     try:
