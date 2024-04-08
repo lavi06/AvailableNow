@@ -81,14 +81,12 @@ def break_time_slot(schedule_at, ending_at, refreshing_time, refreshing_time_2):
 
     return time_blocks
 
-# schedule_at = datetime(2024, 4, 5, 12, 30, 0)  # Year, Month, Day, Hour, Minute, Second
-# ending_at   = datetime(2024, 4, 5, 14, 55, 0)  # Year, Month, Day, Hour, Minute, Second
+schedule_at = datetime(2024, 4, 5, 12, 30, 0)  # Year, Month, Day, Hour, Minute, Second
+ending_at   = datetime(2024, 4, 5, 14, 55, 0)  # Year, Month, Day, Hour, Minute, Second
 
-# f = break_time_slot(schedule_at, ending_at, 20, 25)
-# for each in f:
-#     print(f[each])
-
-# input("----")
+f = break_time_slot(schedule_at, ending_at, 20, 25)
+for each in f:
+    print(f[each])
 
 
 def give_json_request(form):
@@ -228,29 +226,26 @@ def check_message(access_token):
         data = response.json()
 
         if response.status_code == 200:
-            return response.json()["data"]
+            _id = None
+            messages = None
+            for each in data:
+                if each.get("name") == "INBOX":
+                    _id = each.get("id")
+                    messages = each.get("messages")
+
+            if _id is None:
+                print_and_log("Error in Fetching Messages")
+            elif messages > 0:
+                print_and_log(f"{messages} Unread Messages in Inbox")            
+            elif messages == 0:
+                print_and_log("No New Messages in Inbox")
+
+            return messages
 
         else:
             print_and_log(response.content)
             raise UserException("Got 400/500 status code: " + str(response.status_code) + ", response: " + str(response.json()))
 
-
-        _id = None
-        messages = None
-        for each in data:
-            if each.get("name") == "INBOX":
-                _id = each.get("id")
-                messages = each.get("messages")
-
-
-        if _id is None:
-            print_and_log("Error in Fetching Messages")
-        elif messages > 0:
-            print_and_log(f"{messages} Unread Messages in Inbox")            
-        elif messages == 0:
-            print_and_log("No New Messages in Inbox")
-
-        return messages
 
 
         # response = requests.get(

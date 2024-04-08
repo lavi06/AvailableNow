@@ -132,12 +132,19 @@ def schedule():
         ### ADD Json Fields to a file
         update_previous_data_db(username, json.dumps(json_data))
 
+        subprocesses_without_check_inbox = {}
+        for each in subprocesses:
+            if subprocesses[each]["action"] == "Check Message":
+                pass
+            else:
+                subprocesses_without_check_inbox[each] = subprocesses[each]["action"]
+
         #### SCEHDULE DATA TO DATABASE
         data = {"username": username , "password": scheduler_form.password.data, "refreshing": refreshing,
                 "schedule_at": schedule_at, "ending_at": ending_at, 
                 "local_schedule_at": local_schedule_at, "local_ending_at": local_ending_at, 
                 "json_data": json_data, "status" : status,
-                "sub_processes" : subprocesses
+                "sub_processes" : subprocesses_without_check_inbox
                 }
 
         _id = db_add_pending_schedule(**data)
@@ -233,8 +240,15 @@ def scheduled_ads(username):
     try:
         schedule_tasks = db_get_all_scheduled_ads(username)
         for i,each in enumerate(schedule_tasks):
+
             schedule_tasks[i]["json_data"]   = json.loads(schedule_tasks[i]["json_data"])
             schedule_tasks[i]["sub_processes"] = json.loads(schedule_tasks[i]["sub_processes"])
+
+            # for s in schedule_tasks[i]["sub_processes"]:
+            #     if s["action"] == "Check Message":
+            #         pass
+            #     else:
+
 
         return jsonify({'schedule_ads': schedule_tasks}), 200
     except Exception as e:
