@@ -125,26 +125,34 @@ def schedule():
 
         time_blocks = break_time_slot(schedule_at, ending_at, refreshing, refreshing_2)
 
-        subprocesses = json.dumps(time_blocks)
-        json_data = give_json_request(scheduler_form)
+        # timeblocks_without_check_inbox = {}
+        # for each in list(time_blocks.keys()):
+        #     print(each)
+        #     if time_blocks[each]["action"] == "Check Message":
+        #         pass
+        #     else:
+        #         timeblocks_without_check_inbox[each] = time_blocks[each]
 
+        # print(time_blocks)
+        # print(timeblocks_without_check_inbox)
+
+
+        subprocesses = json.dumps(time_blocks)
+        # subprocesses_without_check_inbox = json.dumps(timeblocks_without_check_inbox)
+
+        json_data = give_json_request(scheduler_form)
 
         ### ADD Json Fields to a file
         update_previous_data_db(username, json.dumps(json_data))
 
-        subprocesses_without_check_inbox = {}
-        for each in subprocesses:
-            if subprocesses[each]["action"] == "Check Message":
-                pass
-            else:
-                subprocesses_without_check_inbox[each] = subprocesses[each]["action"]
 
         #### SCEHDULE DATA TO DATABASE
         data = {"username": username , "password": scheduler_form.password.data, "refreshing": refreshing,
                 "schedule_at": schedule_at, "ending_at": ending_at, 
                 "local_schedule_at": local_schedule_at, "local_ending_at": local_ending_at, 
                 "json_data": json_data, "status" : status,
-                "sub_processes" : subprocesses_without_check_inbox
+                # "sub_processes" : subprocesses_without_check_inbox
+                "sub_processes" : subprocesses
                 }
 
         _id = db_add_pending_schedule(**data)

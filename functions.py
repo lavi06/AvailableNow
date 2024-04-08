@@ -81,13 +81,6 @@ def break_time_slot(schedule_at, ending_at, refreshing_time, refreshing_time_2):
 
     return time_blocks
 
-schedule_at = datetime(2024, 4, 5, 12, 30, 0)  # Year, Month, Day, Hour, Minute, Second
-ending_at   = datetime(2024, 4, 5, 14, 55, 0)  # Year, Month, Day, Hour, Minute, Second
-
-f = break_time_slot(schedule_at, ending_at, 20, 25)
-for each in f:
-    print(f[each])
-
 
 def give_json_request(form):
 

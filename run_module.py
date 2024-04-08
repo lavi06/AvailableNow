@@ -78,7 +78,9 @@ def run_scheduler():
 
             elif action == "Check Message":
                 ### Code to check message
-                
+                schedule_status = "Running"
+                TASK_STATUS = "Initiated"                
+
                 print_and_log("Cheching Inbox : ")
                 _id, logged, access_token = validate_creds(username, password)
                 if not logged:
@@ -89,6 +91,11 @@ def run_scheduler():
                     if messages > 0:
                         ## Trigger Email
                         broadcast(f"{messages} Unread Messages in Inbox")
+                        TASK_STATUS = f"{messages} Unread"
+
+                update_db("TASKS", primary_task_id, "status", schedule_status, "task_status", TASK_STATUS)
+                local_schedule_start, local_schedule_end = update_scheduletask_db(scheduleid, schedule_status, task_id, TASK_STATUS)
+
 
             else:
 
