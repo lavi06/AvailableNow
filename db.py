@@ -19,6 +19,7 @@ DB_NAME = path.join(ROOT, DB_NAME)
 logger_file_name = f"LOGS.log"
 logging.basicConfig(filename = path.join(ROOT, logger_file_name), level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+# {'task_id': 22, 'start': '2024-04-05 14:50:00', 'end': '2024-04-05 14:55:00', 'action': 'Check Message', 'status': 'Pending'}
 
 def print_and_log(statement, log_level = logging.INFO):
     print(statement)

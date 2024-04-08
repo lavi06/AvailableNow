@@ -76,6 +76,20 @@ def run_scheduler():
                 update_db("TASKS", primary_task_id, "status", schedule_status, "task_status", "Expired")
                 local_schedule_start, local_schedule_end = update_scheduletask_db(scheduleid, schedule_status, task_id, "Expired")
 
+            elif action == "Check Message":
+                ### Code to check message
+                
+                print_and_log("Cheching Inbox : ")
+                _id, logged, access_token = validate_creds(username, password)
+                if not logged:
+                    raise UserException("User login failed, Invalid credentials")
+
+                messages = check_message(access_token)
+                if messages:
+                    if messages > 0:
+                        ## Trigger Email
+                        broadcast(f"{messages} Unread Messages in Inbox")
+
             else:
 
                 TASK_STATUS = "Initiated"
@@ -84,6 +98,7 @@ def run_scheduler():
                 _id, logged, access_token = validate_creds(username, password)
                 if not logged:
                     raise UserException("User login failed, Invalid credentials")
+
 
                 # Create/Refresh/Delete
                 if action == "Delete":

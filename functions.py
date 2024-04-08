@@ -20,6 +20,8 @@ from db import print_and_log
 
 ####################################################################
 
+
+
 def break_time_slot(schedule_at, ending_at, refreshing_time, refreshing_time_2):
     current_time = schedule_at
     time_blocks = {}
@@ -52,7 +54,41 @@ def break_time_slot(schedule_at, ending_at, refreshing_time, refreshing_time_2):
         "status" : "Pending"
     }
 
+    start = schedule_at
+    while ((ending_at - start).total_seconds())/60 > 0:
+        if (start + timedelta(minutes=10)) > ending_at:
+            end = ending_at
+        else:
+            end = (start + timedelta(minutes=10))
+        time_blocks[len(time_blocks)] = {
+            "task_id": len(time_blocks),
+            "start": start.strftime('%Y-%m-%d %H:%M:%S'),
+            "end": end.strftime('%Y-%m-%d %H:%M:%S'),
+            "action": "Check Message",
+            "status": "Pending"
+        }
+        start += timedelta(minutes=10)
+
+    start = start-timedelta(minutes=10)
+    if start != ending_at:
+        time_blocks[len(time_blocks)] = {
+            "task_id": len(time_blocks),
+            "start": ending_at.strftime('%Y-%m-%d %H:%M:%S'),
+            "end": ending_at.strftime('%Y-%m-%d %H:%M:%S'),
+            "action": "Check Message",
+            "status": "Pending"
+        }
+
     return time_blocks
+
+# schedule_at = datetime(2024, 4, 5, 12, 30, 0)  # Year, Month, Day, Hour, Minute, Second
+# ending_at   = datetime(2024, 4, 5, 14, 55, 0)  # Year, Month, Day, Hour, Minute, Second
+
+# f = break_time_slot(schedule_at, ending_at, 20, 25)
+# for each in f:
+#     print(f[each])
+
+# input("----")
 
 
 def give_json_request(form):
@@ -167,6 +203,61 @@ def get_user_details(access_token, _id, link = "Create"):
             print_and_log(response.content)
             raise UserException("Got 400/500 status code: " + str(response.status_code) + ", response: " +
                                 str(response.json()))
+
+    except requests.exceptions.RequestException as e:
+
+        print_and_log(f"ERROR: Exception while fetching user details: {str(e)}")
+
+        raise UserException("Error fetching details for user with ID: {}".format(_id)) from e
+
+    except Exception as e:
+        print_and_log(f"ERROR: Unexpected exception while fetching user details: {str(e)}")
+        raise UserException("Error fetching details for user with ID: {}".format(_id)) from e
+
+
+def check_message(access_token):
+
+
+    try:
+        headers = {
+            'authorization': 'Bearer ' + access_token,
+            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+        }
+
+        response = requests.get('https://api.preferred411.com/api/companions/mailbox/folders', params = {'messages': '1'}, headers=headers)
+        data = response.json()
+
+        if response.status_code == 200:
+            return response.json()["data"]
+
+        else:
+            print_and_log(response.content)
+            raise UserException("Got 400/500 status code: " + str(response.status_code) + ", response: " + str(response.json()))
+
+
+        _id = None
+        messages = None
+        for each in data:
+            if each.get("name") == "INBOX":
+                _id = each.get("id")
+                messages = each.get("messages")
+
+
+        if _id is None:
+            print_and_log("Error in Fetching Messages")
+        elif messages > 0:
+            print_and_log(f"{messages} Unread Messages in Inbox")            
+        elif messages == 0:
+            print_and_log("No New Messages in Inbox")
+
+        return messages
+
+
+        # response = requests.get(
+        #     f'https://api.preferred411.com/api/companions/mailbox/folders/{_id}/messages',
+        #     params = {'page': '1'},
+        #     headers = headers,
+        # )
 
     except requests.exceptions.RequestException as e:
 

@@ -20,6 +20,10 @@ from handle_login import validate_creds
 from telegram import broadcast
 from db import print_and_log
 from functions import *
+import requests
+import requests
+import json
+
 
 ####################################################################
 
@@ -94,7 +98,6 @@ def user_fields():
         return jsonify({'message': 'Internal Server Error', 'errors': str(e)}), 500
 
 
-
 @app.route("/schedule", methods=["POST"])
 def schedule():
 
@@ -142,12 +145,19 @@ def schedule():
         #### Add Tasks to Database 
         for block in time_blocks:
             block = time_blocks[block]
+            if block.get("action") == "Check Message":
+                data = {"schedule_id" : _id,
+                        "username": scheduler_form.username.data, "password": scheduler_form.password.data, "json_data": None,
+                        "start": block.get("start"), "end": block.get("end"), "action": block.get("action"),
+                        "status":"-", "task_status": block.get("status"), "task_id": block.get("task_id")
+                        }
 
-            data = {"schedule_id" : _id,
-                    "username": scheduler_form.username.data, "password": scheduler_form.password.data, "json_data": json_data,
-                    "start": block.get("start"), "end": block.get("end"), "action": block.get("action"),
-                    "status":"Scheduled", "task_status": block.get("status"), "task_id": block.get("task_id")
-                    }
+            else:
+                data = {"schedule_id" : _id,
+                        "username": scheduler_form.username.data, "password": scheduler_form.password.data, "json_data": json_data,
+                        "start": block.get("start"), "end": block.get("end"), "action": block.get("action"),
+                        "status":"Scheduled", "task_status": block.get("status"), "task_id": block.get("task_id")
+                        }
 
             db_add_pending_tasks(**data)
 
