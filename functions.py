@@ -208,7 +208,6 @@ def get_user_details(access_token, _id, link = "Create"):
 
 def check_message(access_token):
 
-
     try:
         headers = {
             'authorization': 'Bearer ' + access_token,
@@ -221,7 +220,7 @@ def check_message(access_token):
         if response.status_code == 200:
             _id = None
             messages = None
-            for each in data:
+            for each in data["data"]:
                 if each.get("name") == "INBOX":
                     _id = each.get("id")
                     messages = each.get("messages")
@@ -240,7 +239,6 @@ def check_message(access_token):
             raise UserException("Got 400/500 status code: " + str(response.status_code) + ", response: " + str(response.json()))
 
 
-
         # response = requests.get(
         #     f'https://api.preferred411.com/api/companions/mailbox/folders/{_id}/messages',
         #     params = {'page': '1'},
@@ -255,7 +253,7 @@ def check_message(access_token):
 
     except Exception as e:
         print_and_log(f"ERROR: Unexpected exception while fetching user details: {str(e)}")
-        raise UserException("Error fetching details for user with ID: {}".format(_id)) from e
+        raise OperationalException("ERROR: Could Not check status with following error: " + str(e))
 
 
 def check_status(access_token, _id):
