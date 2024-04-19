@@ -17,7 +17,7 @@ from db import update_db, update_previous_data_db, update_scheduletask_db, updat
 from exceptions import OperationalException, UserException, AlreadyScheduleException
 from forms import InitialForm, CreateForm, ScheduleForm
 from handle_login import validate_creds
-from telegram import broadcast
+from telegram import broadcast, send_email
 from db import print_and_log
 from functions import *
 
@@ -90,12 +90,11 @@ def run_scheduler():
                 if messages:
                     if messages > 0:
                         ## Trigger Email
-                        broadcast(f"{messages} Unread Messages in Inbox")
+                        send_email(f"{messages} Unread Messages in Inbox")
                         TASK_STATUS = f"{messages} Unread"
 
                 update_db("TASKS", primary_task_id, "status", schedule_status, "task_status", TASK_STATUS)
                 local_schedule_start, local_schedule_end = update_scheduletask_db(scheduleid, schedule_status, task_id, TASK_STATUS)
-
 
             else:
 

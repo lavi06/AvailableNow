@@ -27,6 +27,36 @@ def broadcast(msg):
     return resp.text
 
 
+### BREVO - SIGN IN WITH GOOGLE
+def send_email(message):
+    API_key = "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"
+
+    headers = {
+        'accept': 'application/json',
+        'api-key': API_key,
+        'content-type': 'application/json',
+    }
+
+    json_data = {
+        'sender': {
+            'name': 'AvailableNow-BOT',
+            'email': 'sashanicole.availablenow@gmail.com',
+        },
+        'to': [
+            {
+                'email': 'minxl@protonmail.com',
+                'name': 'Sasha Nicole',
+            },
+        ],
+        'subject': "AvailableNow : Message Alerts" ,
+        'htmlContent': '<html><head></head><body><p>' + message +'</p></body></html>',
+    }
+
+    response = requests.post('https://api.brevo.com/v3/smtp/email', headers=headers, json=json_data)
+    print(response.content)
+
+
+
 # Refreshed Ad/ Created Ad/ Completed Scheduled Ad 
 # broadcast()
 # html = f"""
